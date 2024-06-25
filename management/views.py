@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.db import transaction
 from rest_framework import viewsets
 from rest_framework.response import Response
