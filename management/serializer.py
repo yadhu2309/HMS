@@ -7,6 +7,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MenuItemSerializer(serializers.ModelSerializer):
+    category_name = serializers.ReadOnlyField(source='category.name')
     class Meta:
         model = MenuItem
         fields = '__all__'
@@ -22,4 +23,10 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['table_number', 'status', 'total_price', 'order_time', 'items']
+    
+class InventorySerializer(serializers.ModelSerializer):
+    item = serializers.ReadOnlyField(source='menu_items.name')
+    class Meta:
+        model = Inventory
+        fields = '__all__'
 

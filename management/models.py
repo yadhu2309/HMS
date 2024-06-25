@@ -1,3 +1,4 @@
+from typing import Iterable
 from django.db import models
 
 # Create your models here.
@@ -43,3 +44,12 @@ class OrderItem(models.Model):
 class Inventory(models.Model):
     menu_items = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     quantity_in_stock = models.IntegerField()
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.quantity_in_stock > 0:
+            self.menu_items.available = True
+        else:
+            self.menu_items.available = False
+        self.menu_items.save()
