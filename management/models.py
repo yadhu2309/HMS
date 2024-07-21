@@ -16,6 +16,10 @@ class MenuItem(models.Model):
     available = models.BooleanField(default=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='menu_items')
 
+    def save(self, *args, **kwargs ):
+        self.name = self.name.capitalize()
+        return super().save(**args, **kwargs)
+
 class Order(models.Model):
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
@@ -40,8 +44,12 @@ class OrderItem(models.Model):
         return super().save(*args, **kwargs)
     
 class Inventory(models.Model):
-    menu_items = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    menu_items = models.ForeignKey(MenuItem, on_delete=models.CASCADE, related_name='inventory_items')
     quantity_in_stock = models.IntegerField()
+
+    def update_quantity_in_stock(self, quantity):
+        self.quantity_in_stock -= quantity
+        self.save()
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
